@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(denso_robot_control)
 
+# Add export for compile commands for clangd and other development tools
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
@@ -130,4 +133,3 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
-

@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(denso_robot_moveit_demo)
 
+# Add export for compile commands for clangd and other development tools
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Common cmake code applied to all moveit packages
 find_package(moveit_common REQUIRED)
 #moveit_package()
@@ -12,7 +15,9 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(moveit_common REQUIRED)
+find_package(control_msgs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
+find_package(moveit_servo REQUIRED)
 find_package(rosidl_default_runtime REQUIRED)
 
 # This is the general demo
@@ -35,6 +40,16 @@ add_executable(
   src/denso_robot_moveit_pickandplace_scara.cpp)
 ament_target_dependencies(
   denso_robot_moveit_pickandplace_scara
+  moveit_ros_planning_interface)
+
+# This is a demo for controlling the robot with a joystick
+add_executable(
+  denso_robot_moveit_joystick
+  src/denso_robot_moveit_joystick.cpp)
+ament_target_dependencies(
+  denso_robot_moveit_joystick
+  control_msgs
+  moveit_servo
   moveit_ros_planning_interface)
 
 #=============
@@ -65,9 +80,18 @@ install(
   RUNTIME DESTINATION lib/${PROJECT_NAME}
   INCLUDES DESTINATION include)
 
+install(
+  TARGETS denso_robot_moveit_joystick
+  EXPORT export_denso_robot_moveit_joystick
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+  INCLUDES DESTINATION include)
+
 ament_export_targets(
   export_${PROJECT_NAME}
   export_denso_robot_moveit_pickandplace
+  export_denso_robot_moveit_joystick
   export_denso_robot_moveit_pickandplace_scara)
 
 install(
